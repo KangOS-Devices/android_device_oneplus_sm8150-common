@@ -1,4 +1,3 @@
-
 #
 # Copyright (C) 2018-2019 The LineageOS Project
 #
@@ -17,11 +16,7 @@ PRODUCT_COPY_FILES += \
 # Overlays
 DEVICE_PACKAGE_OVERLAYS += \
     $(LOCAL_PATH)/overlay \
-    $(LOCAL_PATH)/overlay-du
-
-PRODUCT_ENFORCE_RRO_TARGETS := *
-PRODUCT_ENFORCE_RRO_EXCLUDED_OVERLAYS += \
-    $(LOCAL_PATH)/overlay-du/packages/apps/Snap
+    $(LOCAL_PATH)/overlay-aosp
 
 # A/B
 AB_OTA_UPDATER := true
@@ -91,6 +86,10 @@ PRODUCT_COPY_FILES += \
 PRODUCT_PACKAGES += \
     AntHalService
 
+# Device Settings
+#PRODUCT_PACKAGES += \
+#    DeviceSettings
+
 # Atrace
 PRODUCT_PACKAGES += \
     android.hardware.atrace@1.0-service
@@ -126,6 +125,7 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/audio/audio_platform_info.xml:$(TARGET_COPY_OUT_VENDOR)/etc/audio_platform_info.xml \
     $(LOCAL_PATH)/audio/audio_platform_info_oppo.xml:$(TARGET_COPY_OUT_VENDOR)/etc/audio_platform_info_oppo.xml \
     $(LOCAL_PATH)/audio/audio_policy_configuration.xml:$(TARGET_COPY_OUT_VENDOR)/etc/audio_policy_configuration.xml \
+    $(LOCAL_PATH)/audio/msmnile/audio_policy_configuration.xml:$(TARGET_COPY_OUT_VENDOR)/etc/audio/audio_policy_configuration.xml \
     $(LOCAL_PATH)/audio/audio_tuning_mixer.txt:$(TARGET_COPY_OUT_VENDOR)/etc/audio_tuning_mixer.txt \
     $(LOCAL_PATH)/audio/audio_tuning_mixer_tavil.txt:$(TARGET_COPY_OUT_VENDOR)/etc/audio_tuning_mixer_tavil.txt \
     $(LOCAL_PATH)/audio/graphite_ipc_platform_info.xml:$(TARGET_COPY_OUT_VENDOR)/etc/graphite_ipc_platform_info.xml \
@@ -133,13 +133,15 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/audio/sound_trigger_mixer_paths.xml:$(TARGET_COPY_OUT_VENDOR)/etc/sound_trigger_mixer_paths.xml \
     $(LOCAL_PATH)/audio/sound_trigger_mixer_paths_wcd9340.xml:$(TARGET_COPY_OUT_VENDOR)/etc/sound_trigger_mixer_paths_wcd9340.xml \
     $(LOCAL_PATH)/audio/sound_trigger_mixer_paths_wcd9340_qrd.xml:$(TARGET_COPY_OUT_VENDOR)/etc/sound_trigger_mixer_paths_wcd9340_qrd.xml \
-    $(LOCAL_PATH)/audio/sound_trigger_platform_info.xml:$(TARGET_COPY_OUT_VENDOR)/etc/sound_trigger_platform_info.xml 
+    $(LOCAL_PATH)/audio/sound_trigger_platform_info.xml:$(TARGET_COPY_OUT_VENDOR)/etc/sound_trigger_platform_info.xml
 
 PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/audio/msmnile/audio_policy_configuration_a2dp_offload_disabled.xml:$(TARGET_COPY_OUT_VENDOR)/etc/audio/audio_policy_configuration_a2dp_offload_disabled.xml \
     $(LOCAL_PATH)/audio/bluetooth_hearing_aid_audio_policy_configuration.xml:$(TARGET_COPY_OUT_VENDOR)/etc/bluetooth_hearing_aid_audio_policy_configuration.xml \
     frameworks/av/services/audiopolicy/config/a2dp_in_audio_policy_configuration.xml:$(TARGET_COPY_OUT_VENDOR)/etc/a2dp_in_audio_policy_configuration.xml \
-    frameworks/av/services/audiopolicy/config/audio_policy_volumes.xml:$(TARGET_COPY_OUT_VENDOR)/etc/audio_policy_volumes.xml \
-    frameworks/av/services/audiopolicy/config/default_volume_tables.xml:$(TARGET_COPY_OUT_VENDOR)/etc/default_volume_tables.xml \
+    $(LOCAL_PATH)/audio/audio_policy_volumes.xml:$(TARGET_COPY_OUT_VENDOR)/etc/audio_policy_volumes.xml \
+    frameworks/av/services/audiopolicy/config/bluetooth_audio_policy_configuration.xml:$(TARGET_COPY_OUT_VENDOR)/etc/bluetooth_audio_policy_configuration.xml \
+    $(LOCAL_PATH)/audio/default_volume_tables.xml:$(TARGET_COPY_OUT_VENDOR)/etc/default_volume_tables.xml \
     frameworks/av/services/audiopolicy/config/r_submix_audio_policy_configuration.xml:$(TARGET_COPY_OUT_VENDOR)/etc/r_submix_audio_policy_configuration.xml
 
 # Boot control
@@ -165,10 +167,9 @@ PRODUCT_PACKAGES += \
     android.hardware.camera.provider@2.4-impl \
     android.hardware.camera.provider@2.4-service_64 \
     libxml2 \
-    Snap \
     vendor.oneplus.camera.CameraHIDL@1.0.vendor \
-    vendor.qti.hardware.camera.device@1.0.vendor
-
+    vendor.qti.hardware.camera.device@1.0.vendor \
+    libgui_vendor
 # CNE
 PRODUCT_PACKAGES += \
     cneapiclient \
@@ -213,10 +214,16 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     vendor.qti.hardware.cryptfshw@1.0.vendor
 
+# Dex
+PRODUCT_PACKAGES += \
+     cppreopts.sh
+PRODUCT_PROPERTY_OVERRIDES += \
+     ro.cp_system_other_odex=1
+
 # Display
 PRODUCT_PACKAGES += \
     android.hardware.graphics.composer@2.3-service \
-    android.hardware.graphics.mapper@2.0-impl-qti-display \
+    android.hardware.graphics.mapper@3.0-impl-qti-display \
     android.hardware.memtrack@1.0-impl \
     android.hardware.memtrack@1.0-service \
     gralloc.msmnile \
@@ -228,11 +235,11 @@ PRODUCT_PACKAGES += \
     libtinyxml \
     libvulkan \
     memtrack.msmnile \
-    vendor.display.config@1.7 \
+    vendor.display.config@1.11 \
     vendor.qti.hardware.display.allocator-service \
-    vendor.qti.hardware.display.allocator@1.0-service \
-    vendor.qti.hardware.display.allocator@1.0.vendor \
-    vendor.qti.hardware.display.mapper@1.0.vendor
+    vendor.qti.hardware.display.allocator@3.0-service \
+    vendor.qti.hardware.display.allocator@3.0.vendor \
+    vendor.qti.hardware.display.mapper@3.0.vendor
 
 # Doze
 PRODUCT_PACKAGES += \
@@ -362,10 +369,6 @@ PRODUCT_PACKAGES += \
     libOmxVidcCommon \
     libstagefrighthw
 
-#PixelLiveWallpaper
-PRODUCT_PACKAGES += \
-    PixelLiveWallpaperPrebuilt
-
 # Power
 PRODUCT_PACKAGES += \
     android.hardware.power@1.2-service-qti
@@ -377,8 +380,7 @@ PRODUCT_PACKAGES += \
     OnePlusCameraService
 
 PRODUCT_COPY_FILES += \
-    $(LOCAL_PATH)/prebuilts/etc/permissions/privapp-permissions-oem-system.xml:system/etc/permissions/privapp-permissions-oem-system.xml \
-    $(LOCAL_PATH)/prebuilts/etc/sysconfig/hiddenapi-package-whitelist-oneplus.xml:system/etc/sysconfig/hiddenapi-package-whitelist-oneplus.xml
+    $(LOCAL_PATH)/prebuilts/etc/permissions/privapp-permissions-oem-system.xml:system/etc/permissions/privapp-permissions-oem-system.xml
 
 # QMI
 PRODUCT_PACKAGES += \
@@ -392,10 +394,6 @@ PRODUCT_PACKAGES += \
     rcs_service_aidl.xml \
     rcs_service_api \
     rcs_service_api.xml
-
-# Recorder
-PRODUCT_PACKAGES += \
-    OPScreenRecorder
 
 # RIL
 PRODUCT_PACKAGES += \
@@ -445,11 +443,7 @@ PRODUCT_PACKAGES += \
     qti-telephony-hidl-wrapper \
     qti_telephony_hidl_wrapper.xml \
     qti-telephony-utils \
-    qti_telephony_utils.xml \
-    telephony-ext
-
-PRODUCT_BOOT_JARS += \
-    telephony-ext
+    qti_telephony_utils.xml
 
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/privapp-permissions-ims.xml:$(TARGET_COPY_OUT_PRODUCT)/etc/permissions/privapp-permissions-ims.xml
@@ -461,24 +455,15 @@ PRODUCT_PACKAGES += \
 # Thermal
 PRODUCT_PACKAGES += \
     android.hardware.thermal@1.0-impl \
-    android.hardware.thermal@1.0-service \
-    thermal.msmnile
+    android.hardware.thermal@1.0-service
 
 # Touch
 PRODUCT_PACKAGES += \
     vendor.lineage.touch@1.0-service.oneplus_msmnile
-    
-# AOSiP Device Settings
-PRODUCT_PACKAGES += \
-    DeviceSettings
 
 # tri-state key
 PRODUCT_PACKAGES += \
     tri-state-key_daemon
-
-# Trust HAL
-PRODUCT_PACKAGES += \
-    vendor.lineage.trust@1.0-service
 
 # Update engine
 PRODUCT_PACKAGES += \
@@ -498,8 +483,10 @@ PRODUCT_PACKAGES += \
     android.hardware.wifi@1.0-service \
     hostapd \
     libwpa_client \
+    libwifi-hal \
     libwifi-hal-ctrl \
     libwifi-hal-qcom \
+    libwifi-system-iface \
     vendor.qti.hardware.wifi.hostapd@1.0.vendor \
     vendor.qti.hardware.wifi.hostapd@1.1.vendor \
     vendor.qti.hardware.wifi.supplicant@2.0.vendor \
@@ -519,3 +506,7 @@ PRODUCT_PACKAGES += \
 
 PRODUCT_BOOT_JARS += \
     WfdCommon
+
+# Wallpapers
+PRODUCT_PACKAGES += \
+    PixelLiveWallpaperPrebuilt
